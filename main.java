@@ -2,6 +2,13 @@
 import org.opencv.core.*;
 import org.opencv.highgui.VideoCapture;
 
+/* TO-DO LIST:
+Network tables: Create trigger string variable
+Create imgCapture method
+Create light method
+Create compare method
+*/
+
 public class  main {
     public static void main(String[] args) {
         startUp();
@@ -12,6 +19,7 @@ public class  main {
                 light(true);
                 imgCapture(2);
                 light(false);
+                compare();
 
             else if (trigger.equals("kill")
                 break;
@@ -25,9 +33,6 @@ public class  main {
         VideoCapture camera = new VideoCapture(0);
 
     }
-
-
-
 
 }
 
