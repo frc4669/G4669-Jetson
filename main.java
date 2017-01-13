@@ -23,6 +23,7 @@ public class  main {
             }
             else if (trigger.equals("kill")
                 break;
+       } 
     }
 
 
