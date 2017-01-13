@@ -20,10 +20,9 @@ public class  main {
                 imgCapture(2);
                 light(false);
                 compare();
-
+            }
             else if (trigger.equals("kill")
                 break;
-        }
     }
 
 
