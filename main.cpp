@@ -1,4 +1,7 @@
 //FRC 4669 TX1
+//Resource: http://docs.opencv.org/2.4/doc/tutorials/introduction/load_save_image/load_save_image.html
+//Resource: http://answers.opencv.org/question/1/how-can-i-get-frames-from-my-webcam/
+//Resource: http://www.jetsonhacks.com/2015/12/29/gpio-interfacing-nvidia-jetson-tx1/
 #include <iostream>
 #include <opencv2/core/core.hpp>
 using namespace std;
