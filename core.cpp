@@ -19,7 +19,7 @@ int maxH = 84;
 int maxS = 67;
 int maxV = 255;
 
-int contourThresh = 450;
+int cannyThresh = 450;
 
 
 int main()
@@ -35,7 +35,8 @@ int main()
 
     while (run == true)
     {
-        Mat src, processed;
+        Mat src, blurred, filtered, canny, contour;
+        Mat tempProcessed, drawing;
 
         cap >> src;
 
@@ -49,13 +50,28 @@ int main()
         assert(src.type() == CV_8UC3);
 
         //Blur
-        GaussianBlur(src, processed, Size(15,15), 0, 0);
+        GaussianBlur(src, blurred, Size(15,15), 0, 0);
 
         //Filter Color
-        cvtColor(processed, processed, CV_BGR2HSV);
-        inRange(prosessed, Scalar(minH, minS, minV), Scalar(maxH, maxS, maxV), processed);
+        cvtColor(blurred, tempProcessed, CV_BGR2HSV);
+        inRange(tempProsessed, Scalar(minH, minS, minV), Scalar(maxH, maxS, maxV), filtered);
         
         //Contour
+        vector<vector<Point> > contours;
+        vector<Vec4i> hierarchy;
+
+        cvtColor(filtered, tempProcessed, CV_HSV2RGB;
+        cvtColor(tempProcessed, tempProcessed, CV_RGB2GRAY);
+
+        Canny(tempProcessed, canny, cannyThresh, cannyThresh*2, 3);
+        findContours(canny, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+                      //Dont need to draw? contours is a vector
+
+
+        drawing = Mat::zeros(src.rows, src.cols, CV_8UC3);
+
+
+        
         
 
     }
