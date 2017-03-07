@@ -15,8 +15,6 @@ opencv2/imgproc/imgproc.hpp
 /home/cyanide/Desktop/G4669vision2017/opencv2/imgproc/imgproc.hpp
 iostream
 -
-conio.h
--
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h
