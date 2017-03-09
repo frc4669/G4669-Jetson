@@ -134,10 +134,12 @@ int main()
 void loadGlobalVar()
 {
     ifstream config;
-    config.open("conf_file.txt");
+    config.open(conf_file.c_str());
 
     if (config)
     {
+        cout << "VISION CORE: VARIABLE PRESET LOADING STARTED\n";
+
         config >> minH;
         config >> minS;
         config >> minV;
@@ -147,6 +149,8 @@ void loadGlobalVar()
         config >> cannyThresh;
         config >> thresholdThresh;
         config >> cornerThresh;
+
+        cout << "VISION CORE: VARIABLE PRESET LOADING SUCCESSFUL\n";
 
         config.close();
     }
