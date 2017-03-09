@@ -38,7 +38,7 @@ int blockSize = 2;
 int apertureSize = 3;
 double k = 0.04;
 
-Mat src, blurred, blurredHSV, filtered, filteredGray, canny, threshold_output, scaled;
+Mat src, blurred, blurredHSV, filtered, filteredGray, canny, threshold_output, scaled, contGray;
 Mat tempProcessed, contDrawing, cornerDrawing, normal, normScaled;
 
 vector<vector<Point> > contours;
@@ -105,11 +105,12 @@ int main()
         }
 
         //Corner Detection
+        cvtColor(contDrawing, contGray, CV_RGB2GRAY);
+
         cornerDrawing = Mat::zeros( contDrawing.size(), CV_32FC1 );
-  
-        cornerHarris(contDrawing, tempProcessed, blockSize, apertureSize, k, BORDER_DEFAULT);
-        
-        normalize(tempProcessed, normal, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
+
+        cornerHarris( contGray, cornerDrawing, blockSize, apertureSize, k, BORDER_DEFAULT );
+        normalize(cornerDrawing, normal, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
         convertScaleAbs(normal, normScaled);
 
         for (int x = 0; x < normal.rows; x++)
@@ -125,7 +126,7 @@ int main()
         imshow("Drawing", normScaled); //Keep uncommented in development to avoid videoio error
     }
 
-    cout << "VISION CORE: STOPPED";
+    cout << "VISION CORE: STOPPED\n";
 
     return 0;
 }
