@@ -61,7 +61,7 @@ int main()
     while (run == true)
     {
         if( waitKey(1) == 27 ) 
-            break; // stop capturing by holding ESC 
+            run = false; // stop capturing by holding ESC 
 
         //cap >> src; **********************CHANGE LATER
         src = imread("dark.jpg", 1);
