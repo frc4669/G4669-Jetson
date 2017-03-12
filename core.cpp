@@ -8,6 +8,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+//#include <ntcore/ntcore_cpp.h>
 #include <iostream>
 #include <fstream>
 using namespace cv;
@@ -37,6 +38,8 @@ int cornerThresh = 235;
 int blockSize = 2;
 int apertureSize = 3;
 double k = 0.04;
+
+int contour_length_threshold = 50;
 
 Mat src, blurred, blurredHSV, filtered, filteredGray, canny, threshold_output, scaled, contGray;
 Mat tempProcessed, contDrawing, cornerDrawing, normal, normScaled;
@@ -92,13 +95,24 @@ int main()
         vector<vector<Point> > contours_poly(contours.size());
         vector<Rect> boundRect(contours.size());
 
-        for( size_t i = 0; i < contours.size(); i++ )
+        //Filter out small countour
+
+        for(vector<vector<Point> >::iterator it = contours.begin(); it!=contours.end();)
+        {
+            if (it->size()<contour_length_threshold)
+                it = contours.erase(it);
+            else
+                ++it;
+        }
+
+        //Draw contour
+        for(size_t i = 0; i < contours.size(); i++)
         {
             approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true );
             boundRect[i] = boundingRect( Mat(contours_poly[i]) );
         }
 
-        for( size_t i = 0; i< contours.size(); i++ )
+        for(size_t i = 0; i< contours.size(); i++)
         {
             Scalar color = Scalar( 0, 255, 0 );
             rectangle( contDrawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );

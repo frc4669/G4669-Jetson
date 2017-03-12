@@ -119,6 +119,17 @@ void processing()
         vector<vector<Point> > contours_poly(contours.size());
         vector<Rect> boundRect(contours.size());
 
+        //Filter out small countour
+
+        for(vector<vector<Point> >::iterator it = contours.begin(); it!=contours.end();)
+        {
+            if (it->size()<contour_length_threshold)
+                it = contours.erase(it);
+            else
+                ++it;
+        }
+
+        //Draw contour
         for( size_t i = 0; i < contours.size(); i++ )
         {
             approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true );
