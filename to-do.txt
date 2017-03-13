@@ -1,0 +1,3 @@
+Get center of contours
+Set up network tables
+Set camera exposure to minimum
