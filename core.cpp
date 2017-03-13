@@ -22,6 +22,9 @@ String conf_file = "102.txt";
 
 bool run = true;
 VideoCapture cap;
+VideoCapture cap2;
+VideoCapture cap3;
+VideoCapture cap4;
 
 int minH = 44;
 int minS = 0;
