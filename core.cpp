@@ -39,7 +39,7 @@ int blockSize = 2;
 int apertureSize = 3;
 double k = 0.04;
 
-int contour_length_threshold = 50;
+int contour_length_threshold = 40;
 
 Mat src, blurred, blurredHSV, filtered, filteredGray, canny, threshold_output, scaled, contGray;
 Mat tempProcessed, contDrawing, cornerDrawing, normal, normScaled;
@@ -82,7 +82,11 @@ int main()
         //Filter Color
         assert(blurred.type() == CV_8UC3);
         cvtColor(blurred, blurredHSV, CV_BGR2HSV);
-        inRange(blurredHSV, Scalar(minH, minS, minV), Scalar(maxH, maxS, maxV), filtered);
+        inRange(blurredHSV, Scalar(minH, minS, minV), Scalar(maxH, maxS, maxV), tempProcessed);
+        bitwise_and(blurred, blurred, filtered, tempProcessed = tempProcessed);
+
+        cvtColor(filtered, filtered, CV_HSV2BGR);
+        cvtColor(filtered, filtered, CV_BGR2GRAY);
 
         //Contour
         contDrawing = Mat::zeros(src.rows, src.cols, CV_8UC3);
@@ -95,8 +99,7 @@ int main()
         vector<vector<Point> > contours_poly(contours.size());
         vector<Rect> boundRect(contours.size());
 
-        //Filter out small countour
-
+        /*Filter out small countour
         for(vector<vector<Point> >::iterator it = contours.begin(); it!=contours.end();)
         {
             if (it->size()<contour_length_threshold)
@@ -104,6 +107,7 @@ int main()
             else
                 ++it;
         }
+*/
 
         //Draw contour
         for(size_t i = 0; i < contours.size(); i++)
@@ -117,6 +121,8 @@ int main()
             Scalar color = Scalar( 0, 255, 0 );
             rectangle( contDrawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
         }
+
+        imshow("contDrawing", contDrawing); ///////////////////////////GET RID OF
 
         //Corner Detection
         cvtColor(contDrawing, contGray, CV_RGB2GRAY);
@@ -132,7 +138,10 @@ int main()
             for (int y = 0; y < normal.cols; y++)
             {
                 if ((int) normal.at<float>(x,y) > cornerThresh)
+                {
                     circle(normScaled, Point(y,x), 5, Scalar(0), 2, 8, 0);
+                    cout << x << " " << y << endl;
+                }
             }
         }
 
