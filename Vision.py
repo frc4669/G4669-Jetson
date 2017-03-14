@@ -66,47 +66,47 @@ def runVision():
 			
 		#Bounding Rectangle
 		contours_poly = []
-        boundRect = []
+        	boundRect = []
 
-        #Filter out small countour
-        for contour in contours:
-            if contour.size()<contour_length_threshold:
-                contours.remove(contour)
+        	#Filter out small countour
+        	for contour in contours:
+            		if contour.size()<contour_length_threshold:
+                		contours.remove(contour)
 
-        #Draw contour
-        for contour in contours:
+        	#Draw contour
+        	for contour in contours:
 			poly = cv2.approxPolyDP(contour, 3, true)
-            contours_poly.append(poly)
-            boundRect.append(cv2.boundingRect(poly))
+            	contours_poly.append(poly)
+            	boundRect.append(cv2.boundingRect(poly))
 
-        for bound in boundRect:
-            color = np.Scalar( 0, 255, 0 )
-            contDrawing = cv2.rectangle( contDrawing, bound.tl(), bound.br(), color, 2, 8, 0 )
+        	for bound in boundRect:
+            		color = np.Scalar( 0, 255, 0 )
+            		contDrawing = cv2.rectangle( contDrawing, bound.tl(), bound.br(), color, 2, 8, 0 )
 
-        #imshow("contDrawing", contDrawing);
+        	#imshow("contDrawing", contDrawing);
 
-        #Corner Detection
-        contGray = cv2.cvtColor(contDrawing, cv2.COLOR_BGR2GRAY)
+        	#Corner Detection
+        	contGray = cv2.cvtColor(contDrawing, cv2.COLOR_BGR2GRAY)
 
-        cornerDrawing = np.zeros( contDrawing.size(), cv2.32FC1 )
-        cornerDrawing = cv2.cornerHarris( contGray, blockSize, apertureSize, k, cv2.BORDER_DEFAULT )
-        normal = cv2.normalize(cornerDrawing, 0, 255, cv2.NORM_MINMAX, cv2.32FC1, Mat() )
-        normScaled = cv2.convertScaleAbs(normal)
+        	cornerDrawing = np.zeros( contDrawing.size(), cv2.32FC1 )
+        	cornerDrawing = cv2.cornerHarris( contGray, blockSize, apertureSize, k, cv2.BORDER_DEFAULT )
+        	normal = cv2.normalize(cornerDrawing, 0, 255, cv2.NORM_MINMAX, cv2.32FC1, Mat() )
+        	normScaled = cv2.convertScaleAbs(normal)
 
-        for (int x = 0; x < normal.rows; x++)
-        {
-            for (int y = 0; y < normal.cols; y++)
-            {
-                if ((int) normal.at<float>(x,y) > cornerThresh)
-                {
-                    cv2.circle(normScaled, Point(y,x), 5, np.Scalar(0), 2, 8, 0);
-                    cout << x << " " << y << endl;
-                }
-            }
-        }
+        	for (int x = 0; x < normal.rows; x++)
+        	{
+            		for (int y = 0; y < normal.cols; y++)
+            		{
+                		if ((int) normal.at<float>(x,y) > cornerThresh)
+                		{
+                    			cv2.circle(normScaled, Point(y,x), 5, np.Scalar(0), 2, 8, 0);
+                    			cout << x << " " << y << endl;
+                		}
+            		}
+        	}
 
 
-        imshow("Drawing", normScaled); #Keep uncommented in development to avoid videoio error
+        	imshow("Drawing", normScaled); #Keep uncommented in development to avoid videoio error
 			
 		#hull = getConvexHull(getMaxContour(getContours(processedFrame)))
 		if visionTable.isConnected():
