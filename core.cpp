@@ -22,9 +22,9 @@ String conf_file = "102.txt";
 
 bool run = true;
 VideoCapture cap;
-VideoCapture cap2;
-VideoCapture cap3;
-VideoCapture cap4;
+//VideoCapture cap2;
+//VideoCapture cap3;
+//VideoCapture cap4;
 
 int minH = 44;
 int minS = 0;
@@ -55,7 +55,7 @@ int main()
 {
     cout << "VISION CORE: INITIALIZED\n";
 
-    if(!cap.open(0))
+    if(!cap.open(2))
     {
         cout << "VISION ERROR: CANNOT ACCESS CAMERA\n" << "VISION CORE: STOPPED\n";
 
@@ -69,8 +69,8 @@ int main()
         if( waitKey(1) == 27 ) 
             run = false; // stop capturing by holding ESC 
 
-        //cap >> src; **********************CHANGE LATER
-        src = imread("dark.jpg", 1);
+        cap >> src; //**********************CHANGE LATER
+        //src = imread("dark.jpg", 1);
 
         //Checks if frame is empty
         if (src.empty())
@@ -148,7 +148,7 @@ int main()
             }
         }
 
-
+        imshow("Source", src);
         imshow("Drawing", normScaled); //Keep uncommented in development to avoid videoio error
     }
 

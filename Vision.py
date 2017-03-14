@@ -88,9 +88,9 @@ def runVision():
         	#Corner Detection
         	contGray = cv2.cvtColor(contDrawing, cv2.COLOR_BGR2GRAY)
 
-        	cornerDrawing = np.zeros( contDrawing.size(), cv2.32FC1 )
+        	cornerDrawing = np.zeros( contDrawing.shape(), cv2.CV_32F ) #try np.unit8 if this doesnt work
         	cornerDrawing = cv2.cornerHarris( contGray, blockSize, apertureSize, k, cv2.BORDER_DEFAULT )
-        	normal = cv2.normalize(cornerDrawing, 0, 255, cv2.NORM_MINMAX, cv2.32FC1, Mat() )
+        	normal = cv2.normalize(cornerDrawing, 0, 255, cv2.NORM_MINMAX, cv2.CV_32F, Mat() )
         	normScaled = cv2.convertScaleAbs(normal)
 
         	for (int x = 0; x < normal.rows; x++)
