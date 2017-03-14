@@ -93,24 +93,17 @@ def runVision():
         	normal = cv2.normalize(cornerDrawing, 0, 255, cv2.NORM_MINMAX, cv2.CV_32F, Mat() )
         	normScaled = cv2.convertScaleAbs(normal)
 
-        	for (int x = 0; x < normal.rows; x++)
-        	{
-            		for (int y = 0; y < normal.cols; y++)
-            		{
-                		if ((int) normal.at<float>(x,y) > cornerThresh)
-                		{
-                    			cv2.circle(normScaled, Point(y,x), 5, np.Scalar(0), 2, 8, 0);
-                    			cout << x << " " << y << endl;
-                		}
-            		}
-        	}
+        	for x in range(normal.rows):
+            		for y in range(normal.cols):
+                		if (normal[x][y] > cornerThresh):
+                    			#cv2.circle(normScaled, cv2.Point(y,x), 5, np.Scalar(0), 2, 8, 0);
+                    			print(x+ " " + y)
 
-
-        	imshow("Drawing", normScaled); #Keep uncommented in development to avoid videoio error
+        	#imshow("Drawing", normScaled); #Keep uncommented in development to avoid videoio error
 			
 		#hull = getConvexHull(getMaxContour(getContours(processedFrame)))
-		if visionTable.isConnected():
-			putValuesOnVisionTable(hull)
+		#if visionTable.isConnected():
+		#	putValuesOnVisionTable(hull)
 		#setRunVision(False)
 
 def putValuesOnVisionTable(hull):
