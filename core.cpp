@@ -8,11 +8,12 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-//#include <ntcore/ntcore_cpp.h>
+#include <ntcore/ntcore_cpp.h>
+#include <networktables/NetworkTable.h>
 #include <iostream>
 #include <fstream>
 using namespace cv;
-using namespace std;
+using namespace std::shared_ptr;
 
 //Prototypes
 void loadGlobalVar();
@@ -54,6 +55,12 @@ vector<Vec4i> hierarchy;
 int main()
 {
     cout << "VISION CORE: INITIALIZED\n";
+
+    NetworkTable::SetClientMode();
+    NetworkTable::SetIPAddress("10.63.something");
+    NetworkTable::Initialize();
+    shared_ptr<NetworkTable> myTable = NetworkTable::GetTable("vision");
+    
 
     if(!cap.open(2))
     {
@@ -144,6 +151,8 @@ int main()
                 {
                     circle(normScaled, Point(y,x), 5, Scalar(0), 2, 8, 0);
                     cout << x << " " << y << endl;
+                    myTable->PutNumber("x", x);
+                    myTable->PutNumber("y", y);
                 }
             }
         }
@@ -152,6 +161,7 @@ int main()
         imshow("Drawing", normScaled); //Keep uncommented in development to avoid videoio error
     }
 
+    NetworkTable::Shutdown();
     cout << "VISION CORE: STOPPED\n";
 
     return 0;
