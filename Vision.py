@@ -1,3 +1,5 @@
+import sys
+sys.path.append('/usr/local/lib/python2.7/site-packages')
 import cv2
 from networktables import NetworkTable
 import numpy as np
@@ -7,7 +9,7 @@ visionTable = None
 
 def main():
 	global videoCapture
-	videoCapture = cv2.VideoCapture()
+	videoCapture = cv2.VideoCapture(0)
 	setupVisionTable()
 	runVision()
 
@@ -50,8 +52,8 @@ def runVision():
 			
 		#Filter Color
 		#assert(blurred.type() == CV_8UC3);
-		blurredHVS = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
-		tempProcessed = inRange(blurredHSV, cv2.Scalar(minH, minS, minV), cv2.Scalar(maxH, maxS, maxV))
+		blurredHSV = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
+		tempProcessed = cv2.inRange(blurredHSV, np.array(minH, minS, minV), np.array(maxH, maxS, maxV))
 		filtered = cv2.bitwise_and(blurred, blurred, tempProcessed = tempProcessed)
 		
 		filtered = cv2.cvtColor(filtered, cv2.COLOR_HSV2BGR)
@@ -125,6 +127,7 @@ def getRunVision():
 
 def openCapture():
 	global videoCapture
+	videoCapture = cv2.VideoCapture(0)
 	while (not videoCapture.isOpened()):
 		print("Camera is NOT open")
 		videoCapture.open(0)

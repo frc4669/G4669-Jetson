@@ -8,12 +8,12 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-#include <ntcore/ntcore_cpp.h>
+//#include <ntcore_cpp.h>
 #include <networktables/NetworkTable.h>
 #include <iostream>
 #include <fstream>
 using namespace cv;
-using namespace std::shared_ptr;
+using namespace std;
 
 //Prototypes
 void loadGlobalVar();
@@ -57,12 +57,14 @@ int main()
     cout << "VISION CORE: INITIALIZED\n";
 
     NetworkTable::SetClientMode();
-    NetworkTable::SetIPAddress("10.63.something");
+    NetworkTable::SetIPAddress("10.46.69.2");
     NetworkTable::Initialize();
     shared_ptr<NetworkTable> myTable = NetworkTable::GetTable("vision");
+
+    cout << "VISION CORE: NETWORK TABLES INITIALIZED\n";
     
 
-    if(!cap.open(2))
+    if(!cap.open(0))
     {
         cout << "VISION ERROR: CANNOT ACCESS CAMERA\n" << "VISION CORE: STOPPED\n";
 
@@ -76,8 +78,8 @@ int main()
         if( waitKey(1) == 27 ) 
             run = false; // stop capturing by holding ESC 
 
-        cap >> src; //**********************CHANGE LATER
-        //src = imread("dark.jpg", 1);
+        //cap >> src; //**********************CHANGE LATER
+        src = imread("dark.jpg", 1);
 
         //Checks if frame is empty
         if (src.empty())
@@ -141,15 +143,15 @@ int main()
 
         cornerHarris( contGray, cornerDrawing, blockSize, apertureSize, k, BORDER_DEFAULT );
         normalize(cornerDrawing, normal, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
-        convertScaleAbs(normal, normScaled);
+        //convertScaleAbs(normal, normScaled);
 
-        for (int x = 0; x < normal.rows; x++)
+        for (int y = 0; y < normal.rows; y++)
         {
-            for (int y = 0; y < normal.cols; y++)
+            for (int x = 0; x < normal.cols; x++)
             {
-                if ((int) normal.at<float>(x,y) > cornerThresh)
+                if ((int) normal.at<float>(y,x) > cornerThresh)
                 {
-                    circle(normScaled, Point(y,x), 5, Scalar(0), 2, 8, 0);
+                    circle(normal, Point(x,y), 5, Scalar(0), 2, 8, 0);
                     cout << x << " " << y << endl;
                     myTable->PutNumber("x", x);
                     myTable->PutNumber("y", y);
@@ -157,8 +159,10 @@ int main()
             }
         }
 
+
+
         imshow("Source", src);
-        imshow("Drawing", normScaled); //Keep uncommented in development to avoid videoio error
+        imshow("Drawing", normal); //Keep uncommented in development to avoid videoio error
     }
 
     NetworkTable::Shutdown();
