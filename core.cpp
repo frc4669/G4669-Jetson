@@ -64,7 +64,7 @@ int main()
     cout << "VISION CORE: NETWORK TABLES INITIALIZED\n";
     
 
-    if(!cap.open(0))
+    if(!cap.open(1))
     {
         cout << "VISION ERROR: CANNOT ACCESS CAMERA\n" << "VISION CORE: STOPPED\n";
 
@@ -72,14 +72,16 @@ int main()
     }
 
     loadGlobalVar();
+    cap.set(CV_CAP_PROP_BUFFERSIZE, 1);
 
     while (run == true)
     {
         if( waitKey(1) == 27 ) 
             run = false; // stop capturing by holding ESC 
 
-        //cap >> src; //**********************CHANGE LATER
-        src = imread("dark.jpg", 1);
+        //src = cap.grab();
+        cap >> src; //**********************CHANGE LATER
+        //src = imread("dark.jpg", 1);
 
         //Checks if frame is empty
         if (src.empty())
