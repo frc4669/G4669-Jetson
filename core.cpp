@@ -144,22 +144,34 @@ int main()
         cornerHarris( contGray, cornerDrawing, blockSize, apertureSize, k, BORDER_DEFAULT );
         normalize(cornerDrawing, normal, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
         //convertScaleAbs(normal, normScaled);
-
+        int maxX = -1;
+        int minX = 10000;
+        int centerX = 0;
+        int width = 0;
+        
         for (int y = 0; y < normal.rows; y++)
         {
             for (int x = 0; x < normal.cols; x++)
             {
                 if ((int) normal.at<float>(y,x) > cornerThresh)
                 {
-                    circle(normal, Point(x,y), 5, Scalar(0), 2, 8, 0);
+                    //circle(normal, Point(x,y), 5, Scalar(0), 2, 8, 0);
                     cout << x << " " << y << endl;
-                    myTable->PutNumber("x", x);
-                    myTable->PutNumber("y", y);
+                    if (x > maxX)
+                        maxX = x;
+                    if (x < minX)
+                        minX = x;
                 }
             }
         }
 
+        centerX = (maxX + minX) / 2;
+        width = maxX - minX;
+        cout << centerX << " " << width << endl;
+        cout << "MAX: " << maxX << " MIN: " << minX << endl;
 
+        myTable->PutNumber("width", width);
+        myTable->PutNumber("center", centerX);
 
         imshow("Source", src);
         imshow("Drawing", normal); //Keep uncommented in development to avoid videoio error
