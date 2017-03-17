@@ -19,7 +19,7 @@ using namespace std;
 void loadGlobalVar();
 
 //Global Variables
-String conf_file = "102.txt";
+String conf_file = "SI.txt";
 
 bool run = true;
 VideoCapture cap;
@@ -89,6 +89,7 @@ int main()
     }
 
     cap.set(CV_CAP_PROP_BUFFERSIZE, 1);
+    cap.set(CV_CAP_PROP_EXPOSURE, -100);
 
     while (true)
     {
