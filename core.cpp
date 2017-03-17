@@ -89,7 +89,7 @@ int main()
     }
 
     cap.set(CV_CAP_PROP_BUFFERSIZE, 1);
-    cap.set(CV_CAP_PROP_EXPOSURE, -100);
+    //cap.set(CV_CAP_PROP_EXPOSURE, -100);
 
     while (true)
     {
@@ -130,7 +130,7 @@ int main()
         vector<vector<Point> > contours_poly(contours.size());
         vector<Rect> boundRect(contours.size());
 
-        /*Filter out small countour
+        //Filter out small countour
         for(vector<vector<Point> >::iterator it = contours.begin(); it!=contours.end();)
         {
             if (it->size()<contour_length_threshold)
@@ -138,7 +138,7 @@ int main()
             else
                 ++it;
         }
-*/
+
 
         //Draw contour
         for(size_t i = 0; i < contours.size(); i++)
@@ -222,6 +222,7 @@ void loadGlobalVar()
         config >> cannyThresh;
         config >> thresholdThresh;
         config >> cornerThresh;
+        config >> contour_length_threshold;
 
         cout << "VISION CORE: VARIABLE PRESET LOADING SUCCESSFUL\n";
 
