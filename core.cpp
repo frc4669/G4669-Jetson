@@ -2,16 +2,16 @@
 * Galileo Robotics Computer Vision
 * @author  Kenny Ngo
 * @date    3/6/2017
-* @version 2.0
+* @version 2.5
 */
 
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-//#include <ntcore_cpp.h>
 #include <networktables/NetworkTable.h>
 #include <iostream>
 #include <fstream>
+#include <math.h>
 using namespace cv;
 using namespace std;
 
@@ -23,9 +23,6 @@ String conf_file = "102.txt";
 
 bool run = true;
 VideoCapture cap;
-//VideoCapture cap2;
-//VideoCapture cap3;
-//VideoCapture cap4;
 
 int minH = 44;
 int minS = 0;
@@ -42,6 +39,13 @@ int cornerThresh = 235;
 int blockSize = 2;
 int apertureSize = 3;
 double k = 0.04;
+
+int maxX = -1;
+int minX = 10000;
+int centerX = 0;
+int width = 0;
+int dist;
+int angle;
 
 int contour_length_threshold = 10;
 
@@ -68,16 +72,14 @@ int main()
     namedWindow("Color Filtered", 1);
     namedWindow("something", 1);
 
-    createTrackbar("Min H", "Color Filtered", &minH, 179);
-    createTrackbar("Max H", "Color Filtered", &maxH, 179);
+    //createTrackbar("Min H", "Color Filtered", &minH, 179);
+    //createTrackbar("Max H", "Color Filtered", &maxH, 179);
     
-    createTrackbar("Min S", "Color Filtered", &minS, 255);
-    createTrackbar("Max S", "Color Filtered", &maxS, 255);
+    //createTrackbar("Min S", "Color Filtered", &minS, 255);
+    //createTrackbar("Max S", "Color Filtered", &maxS, 255);
 
-    createTrackbar("Min V", "Color Filtered", &minV, 255);
-    createTrackbar("Max V", "Color Filtered", &maxV, 255);
-
-    //createTrackbar("something", "Contour", &cannyThresh, 400);
+    //createTrackbar("Min V", "Color Filtered", &minV, 255);
+    //createTrackbar("Max V", "Color Filtered", &maxV, 255);
 
     if(!cap.open(0))
     {
@@ -88,10 +90,10 @@ int main()
 
     cap.set(CV_CAP_PROP_BUFFERSIZE, 1);
 
-    while (run == true)
+    while (true)
     {
-        if( waitKey(1) == 27 ) 
-            run = false; // stop capturing by holding ESC 
+        if(waitKey(1) == 27 || run == false) 
+            break; // stop capturing by holding ESC 
 
         //src = cap.grab();
         cap >> src; //**********************CHANGE LATER
@@ -160,10 +162,6 @@ int main()
         cornerHarris( contGray, cornerDrawing, blockSize, apertureSize, k, BORDER_DEFAULT );
         normalize(cornerDrawing, normal, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
         //convertScaleAbs(normal, normScaled);
-        int maxX = -1;
-        int minX = 10000;
-        int centerX = 0;
-        int width = 0;
         
         for (int y = 0; y < normal.rows; y++)
         {
@@ -188,8 +186,11 @@ int main()
         cout << "CENTER: " << centerX << endl;
         cout << "WIDTH: " << width << endl;
 
-        myTable->PutNumber("width", width);
-        myTable->PutNumber("center", centerX);
+        dist = -0.15 * width + 62.9;
+        angle = atan((centerX - (640/2)) / dist);
+
+        myTable->PutNumber("distance", dist);
+        myTable->PutNumber("angle", angle);
 
         imshow("Source", src);
         imshow("Color Filtered", filtered);
@@ -212,10 +213,10 @@ void loadGlobalVar()
         cout << "VISION CORE: VARIABLE PRESET LOADING STARTED\n";
 
         config >> minH;
-        config >> minS;
-        config >> minV;
         config >> maxH;
+        config >> minS;
         config >> maxS;
+        config >> minV;
         config >> maxV;
         config >> cannyThresh;
         config >> thresholdThresh;
