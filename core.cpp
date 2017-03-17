@@ -35,15 +35,15 @@ int maxH = 84;
 int maxS = 67;
 int maxV = 255;
 
-int cannyThresh = 450;
-int thresholdThresh = 450; //Not sure if this should be the same var as cannyThresh
+int cannyThresh = 100;
+int thresholdThresh = 100; //Not sure if this should be the same var as cannyThresh
 int cornerThresh = 235;
 
 int blockSize = 2;
 int apertureSize = 3;
 double k = 0.04;
 
-int contour_length_threshold = 40;
+int contour_length_threshold = 10;
 
 Mat src, blurred, blurredHSV, filtered, filteredGray, canny, threshold_output, scaled, contGray;
 Mat tempProcessed, contDrawing, cornerDrawing, normal, normScaled;
@@ -63,15 +63,29 @@ int main()
 
     cout << "VISION CORE: NETWORK TABLES INITIALIZED\n";
     
+    loadGlobalVar();
 
-    if(!cap.open(1))
+    namedWindow("Color Filtered", 1);
+    namedWindow("something", 1);
+
+    createTrackbar("Min H", "Color Filtered", &minH, 179);
+    createTrackbar("Max H", "Color Filtered", &maxH, 179);
+    
+    createTrackbar("Min S", "Color Filtered", &minS, 255);
+    createTrackbar("Max S", "Color Filtered", &maxS, 255);
+
+    createTrackbar("Min V", "Color Filtered", &minV, 255);
+    createTrackbar("Max V", "Color Filtered", &maxV, 255);
+
+    //createTrackbar("something", "Contour", &cannyThresh, 400);
+
+    if(!cap.open(0))
     {
         cout << "VISION ERROR: CANNOT ACCESS CAMERA\n" << "VISION CORE: STOPPED\n";
 
         return 0;
     }
 
-    loadGlobalVar();
     cap.set(CV_CAP_PROP_BUFFERSIZE, 1);
 
     while (run == true)
@@ -171,11 +185,14 @@ int main()
         width = maxX - minX;
         cout << centerX << " " << width << endl;
         cout << "MAX: " << maxX << " MIN: " << minX << endl;
+        cout << "CENTER: " << centerX << endl;
+        cout << "WIDTH: " << width << endl;
 
         myTable->PutNumber("width", width);
         myTable->PutNumber("center", centerX);
 
         imshow("Source", src);
+        imshow("Color Filtered", filtered);
         imshow("Drawing", normal); //Keep uncommented in development to avoid videoio error
     }
 
