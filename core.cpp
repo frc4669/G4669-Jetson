@@ -44,8 +44,8 @@ int maxX = -1;
 int minX = 10000;
 int centerX = 0;
 int width = 0;
-int dist;
-int angle;
+double dist;
+double angle;
 
 int contour_length_threshold = 10;
 
@@ -70,7 +70,6 @@ int main()
     loadGlobalVar();
 
     namedWindow("Color Filtered", 1);
-    namedWindow("something", 1);
 
     //createTrackbar("Min H", "Color Filtered", &minH, 179);
     //createTrackbar("Max H", "Color Filtered", &maxH, 179);
@@ -88,7 +87,9 @@ int main()
         return 0;
     }
 
-    cap.set(CV_CAP_PROP_BUFFERSIZE, 1);
+    cap.set(CV_CAP_PROP_BUFFERSIZE, 0);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
     //cap.set(CV_CAP_PROP_EXPOSURE, -100);
 
     while (true)
@@ -164,6 +165,9 @@ int main()
         normalize(cornerDrawing, normal, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
         //convertScaleAbs(normal, normScaled);
         
+        maxX = -1;
+        minX = 10000;
+
         for (int y = 0; y < normal.rows; y++)
         {
             for (int x = 0; x < normal.cols; x++)
@@ -180,7 +184,7 @@ int main()
             }
         }
 
-        centerX = (maxX + minX) / 2;
+        centerX = (maxX + minX) / 2.0;
         width = maxX - minX;
         cout << centerX << " " << width << endl;
         cout << "MAX: " << maxX << " MIN: " << minX << endl;
@@ -188,7 +192,9 @@ int main()
         cout << "WIDTH: " << width << endl;
 
         dist = -0.15 * width + 62.9;
-        angle = atan((centerX - (640/2)) / dist);
+        angle = atan((centerX - (640.0/2.0)) / dist);
+
+        cout << "Distance: " << dist << " Angle: " << angle << endl;
 
         myTable->PutNumber("distance", dist);
         myTable->PutNumber("angle", angle);
