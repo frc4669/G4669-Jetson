@@ -69,7 +69,7 @@ int main()
     
     loadGlobalVar();
 
-    namedWindow("Color Filtered", 1);
+    //snamedWindow("Color Filtered", 1);
 
     //createTrackbar("Min H", "Color Filtered", &minH, 179);
     //createTrackbar("Max H", "Color Filtered", &maxH, 179);
@@ -140,6 +140,15 @@ int main()
                 ++it;
         }
 
+        vector<cv::Point> merged_contour_points;
+        for (int i = 0; i < contours_poly.size(); i++) 
+        {
+            for (int j = 0; j < contours_poly[i].size(); j++) 
+            {
+                merged_contour_points.push_back(contours_poly[i][j]);
+            }
+        }
+
 
         //Draw contour
         for(size_t i = 0; i < contours.size(); i++)
@@ -154,7 +163,7 @@ int main()
             rectangle( contDrawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
         }
 
-        imshow("contDrawing", contDrawing); ///////////////////////////GET RID OF
+        //imshow("contDrawing", contDrawing); ///////////////////////////GET RID OF
 
         //Corner Detection
         cvtColor(contDrawing, contGray, CV_RGB2GRAY);
@@ -163,6 +172,7 @@ int main()
 
         cornerHarris( contGray, cornerDrawing, blockSize, apertureSize, k, BORDER_DEFAULT );
         normalize(cornerDrawing, normal, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
+
         //convertScaleAbs(normal, normScaled);
         
         maxX = -1;
@@ -191,17 +201,17 @@ int main()
         cout << "CENTER: " << centerX << endl;
         cout << "WIDTH: " << width << endl;
 
-        dist = -0.15 * width + 62.9;
-        angle = atan((centerX - (640.0/2.0)) / dist);
+        //dist = -0.15 * width + 62.9;
+        //angle = atan((centerX - (640.0/2.0)) / dist);
 
-        cout << "Distance: " << dist << " Angle: " << angle << endl;
+        //cout << "Distance: " << dist << " Angle: " << angle << endl;
 
-        myTable->PutNumber("distance", dist);
-        myTable->PutNumber("angle", angle);
+        myTable->PutNumber("centerX", centerX);
+        myTable->PutNumber("width", width);
 
-        imshow("Source", src);
-        imshow("Color Filtered", filtered);
-        imshow("Drawing", normal); //Keep uncommented in development to avoid videoio error
+        //imshow("Source", src);
+        //imshow("Color Filtered", filtered);
+        //imshow("Drawing", normal); //Keep uncommented in development to avoid videoio error
     }
 
     NetworkTable::Shutdown();
